@@ -1,21 +1,20 @@
-import mongoose from 'mongoose'
-import { type } from 'os'
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
     unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
 }, {
   timestamps: true
