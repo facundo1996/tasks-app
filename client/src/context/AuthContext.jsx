@@ -46,6 +46,10 @@ export const AuthProvider = ({ children }) => {
     }
   },[errors])
 
+  useEffect(()=> {
+    
+  },[])
+
   return (
     <AuthContext.Provider value={{
       signup,
