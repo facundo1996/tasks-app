@@ -5,6 +5,13 @@ import {createAccessToken} from "../libs/jwt.js";
 export const register =  async (req, res) => {
   const { username, email, password } = req.body
   try {
+
+    //Validacion de email unico
+    const userFound = await User.findOne({email})
+    if( userFound ) {
+      return res.status(400).json(['The email is already in use'])
+    }
+
     const passwordHash = await bcrypt.hash(password,10)
     const newUser = new User({
       username, 

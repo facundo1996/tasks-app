@@ -1,16 +1,34 @@
-import { useForm } from 'react-hook-form'
-import { registerRequest } from "../api/auth";
-export default function RegisterPage() {
+import { useForm } from 'react-hook-form';
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
-  const { register, handleSubmit } = useForm()
+export default function RegisterPage() {
+  const { register, handleSubmit, formState : {
+    errors
+  } } = useForm()
+  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(isAuthenticated){
+      navigate('/tasks')
+    }
+  },[isAuthenticated])
 
   const onSubmit = handleSubmit(async (values) => {
-    const res = await registerRequest(values)
-    console.log(res)
+    signup(values)
   })
 
   return (
     <div className='bg-zinc-800 max-w-md p-10 rounded-md'>
+      {
+        registerErrors && registerErrors.map((error, i) => (
+          <div key={i} className='bg-red-500 p-2 text-white'>
+            {error}
+          </div>
+        ))
+      }
       <form onSubmit={onSubmit}>
         <input
           placeholder='Username'
@@ -18,18 +36,33 @@ export default function RegisterPage() {
           {...register('username', { required: true })}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
         />
+        {
+          errors.username && (
+            <p className='text-red-500'>Username is required</p>
+          )
+        }
         <input
           placeholder='Email'
           type="email"
           {...register('email', { required: true })}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
         />
+        {
+          errors.email && (
+            <p className='text-red-500'>Email is required</p>
+          )
+        }
         <input
           placeholder='Password'
           type="password"
           {...register('password', { required: true })}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
         />
+        {
+          errors.password && (
+            <p className='text-red-500'>Password is required</p>
+          )
+        }
         <button type='submit'>
           Register
         </button>
