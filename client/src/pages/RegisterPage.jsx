@@ -1,20 +1,20 @@
 import { useForm } from 'react-hook-form';
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function RegisterPage() {
-  const { register, handleSubmit, formState : {
+  const { register, handleSubmit, formState: {
     errors
   } } = useForm()
   const { signup, isAuthenticated, errors: registerErrors } = useAuth();
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       navigate('/tasks')
     }
-  },[isAuthenticated])
+  }, [isAuthenticated])
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values)
@@ -66,6 +66,10 @@ export default function RegisterPage() {
         <button type='submit'>
           Register
         </button>
+
+        <p className="flex gap-x-2 justify-between mt-2">
+          Already Have an account ? <Link className="text-sky-500" to="/login" >Login</Link>
+        </p>
 
       </form>
     </div>
