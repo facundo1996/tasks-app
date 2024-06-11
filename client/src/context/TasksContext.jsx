@@ -1,18 +1,18 @@
 import { createContext, useContext, useState } from "react";
-import { createTasksRequest, getTasksRequest } from "../api/tasks";
+import { createTasksRequest, getTasksRequest, deleteTasksRequest } from "../api/tasks";
 
 const TaskContext = createContext();
 
 export const useTasks = () => {
   const context = useContext(TaskContext);
-  if(!context){
+  if (!context) {
     throw new Error("useTasks must be used within a TaskProvider")
   }
 
   return context;
 }
 
-export function TaskProvider({children}) {
+export function TaskProvider({ children }) {
 
   const [tasks, setTasks] = useState([])
 
@@ -30,12 +30,22 @@ export function TaskProvider({children}) {
     console.log(res)
   }
 
+  const deleteTask = async (id) => {
+    try {
+      const res = await deleteTasksRequest(id)
+      if (res.status === 204) return setTasks(tasks.filter(task => task._id !== id));
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-  return ( 
+
+  return (
     <TaskContext.Provider value={{
       tasks,
       createTask,
-      getTasks
+      getTasks,
+      deleteTask
     }}>
       {children}
     </TaskContext.Provider>
